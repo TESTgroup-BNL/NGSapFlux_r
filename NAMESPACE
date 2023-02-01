@@ -3,3 +3,7 @@
 export(Spline_Fit)
 export(convert_temp)
 export(getmode)
+export(load_Data)
+export(qaqc_remove)
+export(sanity_check_course)
+export(sanity_check_fine)

@@ -37,7 +37,3 @@ Spline_Fit <- function(Y_vals,X_vals=Z$TIMESTAMP, X_Vals_New=X){
   return(Z2$y)
   
 }
-
-
-
-
