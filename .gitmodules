@@ -1,0 +1,3 @@
+[submodule "inst/NGSapFlux"]
+	path = inst/NGSapFlux
+	url = https://github.com/TESTgroup-BNL/NGSapFlux
