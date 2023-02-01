@@ -1,0 +1,41 @@
+Package: ngsapflux
+Title: The NGSapFlux R data processing and analysis package
+Version: 0.1
+Authors@R:
+  c(person(given = "Kenneth",
+           family = "Davidson",
+           role = "ctb",
+           email = "kdavidson@bnl.gov",
+           comment = c(ORCID = "0000-0001-5745-9689")),
+    person(given = "Jeremiah",
+           family = "Anderson",
+           role = "ctb",
+           email = "jeanderson@bnl.gov",
+           comment = c(ORCID = "0000-0001-8925-5226")),
+    person(given = "Shawn",
+           family = "Serbin",
+           role = c("aut", "cre", "ctb"),
+           email = "sserbin@bnl.gov",
+           comment = c(ORCID = "0000-0003-4136-8971")))
+Maintainer: Shawn P. Serbin <sserbin@bnl.gov>
+Description: An R package for working with and processing sap flux generated using the BNL TEST group NGSapFlux sensor package
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    here (>= 0.1),
+    dplyr (>= 1.0.1),
+    ggplot2 (>= 3.3.2),
+Suggests:
+    devtools (>= 2.3.1),
+    remotes (>= 2.2.0),
+    RCurl (>= 1.98-1.2),
+    knitr (>= 1.37),
+    markdown,
+    rmarkdown
+Depends:
+    R (>= 2.10)
+VignetteBuilder: knitr
+NeedsCompilation: no
