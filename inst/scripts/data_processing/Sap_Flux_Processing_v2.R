@@ -10,7 +10,7 @@ rm(list=ls())
 
 # Load functions
 here::here()
-source(paste0(file.path(here::here(),"Code","data_processing"),"/sapflux_functions.R"))
+source(paste0(file.path(here::here(),"inst","scripts","data_processing"),"/sapflux_functions.R"))
 
 # set paths - make sure you open the script from within the git rep structure
 here::here()
@@ -20,13 +20,13 @@ here::here()
 #
 
 #Path_A <- file.path(here::here(),"Code/data_processing/SapFlux_Data/AL")
-Path_A <- file.path(here::here(),"Code/data_processing/SapFlux_Data/AL/3-1")
-Path_B <- file.path(here::here(),"Code/data_processing/SapFlux_Data/BRF")
+Path_A <- file.path(here::here(),"inst/NGSapFlux/example_data/Alabama_NEON/3-1")
+Path_B <- file.path(here::here(),"inst/NGSapFlux/example_data/NewYork_BRF/")
 
 
 # Create example output
 #output_dir <- "tempdir"
-output_dir <- file.path(here::here(),"Code/data_processing/SapFlux_Data/example_output")
+output_dir <- file.path(here::here(),"inst/NGSapFlux/example_data/example_output")
 if (output_dir=="tempdir") {
   outdir <- tempdir()
 } else {
