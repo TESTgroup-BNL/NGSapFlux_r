@@ -2,12 +2,9 @@
 % Please edit documentation in R/load_data.R
 \name{load_data}
 \alias{load_data}
-\alias{load_Data}
-\title{The initial function to load raw CR1000 data
-Set up to run for each CR1000 box's data in a separate directory.
-Can be changed to process all boxes from one directory preferred}
+\title{Function to load and format raw CR1000 data}
 \usage{
-load_Data(
+load_data(
   filepath,
   Origin_DateTime = "2000-01-01 01:00:00",
   End_DateTime = "2030-01-01 01:00:00"
@@ -21,11 +18,15 @@ load_Data(
 \item{End_DateTime}{e.g. 2030-01-01 01:00:00}
 }
 \value{
-BoxA
+unprocData
 }
 \description{
-function to load raw CR1000 data
+function to load raw CR1000 data.
+Set up to run for each CR1000 box's data in a separate directory.
+Can be changed to process all boxes from one directory preferred
 }
 \author{
 Kenneth Davidson
+
+Jeremiah Anderson
 }

@@ -27,7 +27,10 @@ RoxygenNote: 7.2.3
 Imports:
     here (>= 0.1),
     dplyr (>= 1.0.1),
+    plyr (>= 1.8.6),
     ggplot2 (>= 3.3.2),
+    lubridate (>= 1.7.10),
+    hms (>= 1.1.0),
 Suggests:
     devtools (>= 2.3.1),
     remotes (>= 2.2.0),

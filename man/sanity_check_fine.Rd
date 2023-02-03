@@ -16,17 +16,18 @@ sanity_check_fine(
 
 \item{Dates}{The dates / date range to process}
 
-\item{Pre_Threshold_Temp}{PLACEHOLDER}
+\item{Pre_Threshold_Temp}{Difference in temp from mode (during the pre-pulse period) greater than which a point will be considered an outlier}
 
-\item{Post_Threshold_Temp}{PLACEHOLDER}
+\item{Post_Threshold_Temp}{Difference in temp from mode (during the post-pulse period) greater than which a point will be considered an outlier}
 }
 \value{
 QAQC list
 }
 \description{
-Fine QAQC processing. Identifies outliers and flags if data are
-messy by individual point. Data returned as TRUE indicates an error.
-This function is VERY SLOW, can be run in parallel to speed up
+Fine QAQC processing. Breaks each pulse interval into two periods, pre-pulse(00:00-02:00), and post pre-pulse (02:01-15:00).
+Identifies and flags outliers as temperature readings that are greater than given amount above or below the mode temperature reading during that period.
+Output is a matrix, equivalent in dimensions to the input data, filled with binary values.
+Data returned as TRUE indicates an outlier.
 }
 \author{
 Kenneth Davidson
