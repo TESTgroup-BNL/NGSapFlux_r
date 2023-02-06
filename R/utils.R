@@ -5,7 +5,7 @@
 ##' 
 ##' @return Temp_C the measurement temperature in degC
 ##' 
-##' @author Kenneth Davidson
+##' @author Jeremiah Anderson
 ##' @export
 convert_temp <- function(x){
   Temp_C <- 97.1383 - 236.7707*x + 262.5395*x^2 - 155.3591*x^3
@@ -16,8 +16,8 @@ convert_temp <- function(x){
 ##' baseline temp for QAQC and data processing
 ##' 
 ##' @name getmode
-##' @description A helper function to find mode value to establish a pre-heat 
-##' baseline temp for QAQC and data processi
+##' @description A helper function to find mode value to establish  pre and post heat 
+##' baseline temps for QAQC and data processing
 ##' 
 ##' @author Kenneth Davidson
 ##' @export 

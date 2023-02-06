@@ -13,5 +13,5 @@ Temp_C the measurement temperature in degC
 Function to converts from resistance to temp in deg C
 }
 \author{
-Kenneth Davidson
+Jeremiah Anderson
 }

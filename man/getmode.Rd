@@ -8,8 +8,8 @@ baseline temp for QAQC and data processing}
 getmode(v)
 }
 \description{
-A helper function to find mode value to establish a pre-heat
-baseline temp for QAQC and data processi
+A helper function to find mode value to establish  pre and post heat
+baseline temps for QAQC and data processing
 }
 \author{
 Kenneth Davidson

@@ -2,7 +2,7 @@
 ##' 
 ##' @name sanity_check_course
 ##' @description Course QAQC processing. Breaks each pulse interval into three periods, pre-pulse(00:00-02:00), heat (02:01-03:00), and post pre-pulse (02:01-15:00).
-##' Identifies and flags outliers as temperature readings that are greater than given amount above or below the mode temperature reading during that period. 
+##' Identifies and flags outliers as temperature readings that are greater than a given amount above or below the mode temperature reading during that period. 
 ##' If the number of outliers are exceed a user specified minimum threshold, the whole period is flagged as bad. 
 ##' Data returned as TRUE indicates an error.
 ##' 
@@ -63,74 +63,53 @@ sanity_check_course <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp=0.5,
 ##' 
 ##' @name sanity_check_fine
 ##' @description Fine QAQC processing. Breaks each pulse interval into two periods, pre-pulse(00:00-02:00), and post pre-pulse (02:01-15:00).
-##' Identifies and flags outliers as temperature readings that are greater than given amount above or below the mode temperature reading during that period. 
-##' Output is a matrix, equivalent in dimensions to the input data, filled with binary values.
-##' Data returned as TRUE indicates an outlier.
+##' Identifies and flags outliers as temperature readings that are exceed a user specified upper and lower threshold temperature reading during that period. 
+##' Output is a list containing data frame with outlines removed, and two data frames corresponding to the upper and lower temperature thresholds for each data point.
+##' 
 ##' 
 ##' 
 ##' @param df The input data frame
 ##' @param Dates The dates / date range to process 
-##' @param Pre_Threshold_Temp Difference in temp from mode (during the pre-pulse period) greater than which a point will be considered an outlier
-##' @param Post_Threshold_Temp Difference in temp from mode (during the post-pulse period) greater than which a point will be considered an outlier
+##' @param Pre_Threshold_Temp_Upper Difference in mode temp (during the pre-pulse period) greater than which a point will be considered an outlier
+##' @param Pre_Threshold_Temp_Lower Difference in mode temp (during the pre-pulse period) less than which a point will be considered an outlier
+##' @param Post_Threshold_Temp_Upper Difference in mode temp (during the post-pulse period) greater than which a point will be considered an outlier
+##' @param Post_Threshold_Temp_Lower Difference in mode temp (during the post-pulse period) less than which a point will be considered an outlier
 ##' 
-##' @return QAQC list
+##' @return A list containing data frame with outlines removed (replaced by NA), and two data frames corresponding to the upper and lower temperature thresholds for each data point.
+##' 
 ##' @author Kenneth Davidson
 ##' @export
 ##' 
-sanity_check_fine <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp=0.5, 
-                              Post_Threshold_Temp=5){
-  QC_Pre <- data.frame(Date= rep(as.character(Dates), each=48*180), 
-                       Pulse= rep(rep(c('P01','P02','P03','P04','P05','P06','P07','P08','P09','P10','P11','P12','P13','P14','P15','P16','P17','P18','P19','P20','P21','P22','P23','P24',
-                                        'P25','P26','P27','P28','P29','P30','P31','P32','P33','P34','P35','P36','P37','P38','P39','P40','P41','P42','P43','P44','P45','P46','P47','P48'),each=180), times=length(Dates)),
-                       TREE1_TH1=NA,TREE2_TH1=NA,TREE3_TH1=NA,TREE4_TH1=NA,TREE5_TH1=NA,TREE1_TH2=NA,TREE2_TH2=NA,TREE3_TH2=NA,TREE4_TH2=NA,TREE5_TH2=NA,TREE1_TH3=NA,TREE2_TH3=NA,TREE3_TH3=NA,TREE4_TH3=NA,TREE5_TH3=NA)
-  QC_Post <- data.frame(Date= rep(as.character(Dates), each=48*720), 
-                        Pulse= rep(rep(c('P01','P02','P03','P04','P05','P06','P07','P08','P09','P10','P11','P12','P13','P14','P15','P16','P17','P18','P19','P20','P21','P22','P23','P24',
-                                         'P25','P26','P27','P28','P29','P30','P31','P32','P33','P34','P35','P36','P37','P38','P39','P40','P41','P42','P43','P44','P45','P46','P47','P48'),each=720), times=length(Dates)),
-                        TREE1_TH1=NA,TREE2_TH1=NA,TREE3_TH1=NA,TREE4_TH1=NA,TREE5_TH1=NA,TREE1_TH2=NA,TREE2_TH2=NA,TREE3_TH2=NA,TREE4_TH2=NA,TREE5_TH2=NA,TREE1_TH3=NA,TREE2_TH3=NA,TREE3_TH3=NA,TREE4_TH3=NA,TREE5_TH3=NA)
+sanity_check_fine <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp_Upper=0.2, Pre_Threshold_Temp_Lower=0.2,
+                              Post_Threshold_Temp_Upper=5,Post_Threshold_Temp_Lower=0.2){
   
-  for (j in as.character(Dates)){
-    for (k in c('P01','P02','P03','P04','P05','P06','P07','P08','P09','P10','P11','P12','P13','P14','P15','P16','P17','P18','P19','P20','P21','P22','P23','P24',
-                'P25','P26','P27','P28','P29','P30','P31','P32','P33','P34','P35','P36','P37','P38','P39','P40','P41','P42','P43','P44','P45','P46','P47','P48')){
-      MODE_Pre <- sapply(df[df$Date==j &df$Pulse==k&df$Baseline==T,3:17],FUN=getmode)
-      MODE_Post <- sapply(df[df$Date==j &df$Pulse==k&df$Baseline==F,3:17],FUN=getmode)
-      if(is.na(MODE_Pre)[1]){
-        QC_Pre[QC_Pre$Date==j &QC_Pre$Pulse==k,3:17] <- TRUE
-        QC_Post[QC_Post$Date==j &QC_Post$Pulse==k,3:17]  <- TRUE
-        
-      }else{
-        QC_Pre[QC_Pre$Date==j &QC_Pre$Pulse==k,3:17] <- df[df$Date==j &df$Pulse==k&df$Baseline==T,3:17]>= matrix(rep(t(data.frame(MODE_Pre+Pre_Threshold_Temp)),length(df[df$Date==j &df$Pulse==k&df$Baseline==T,3])), ncol=15,byrow = T)|df[df$Date==j &df$Pulse==k&df$Baseline==T,3:17]<=matrix(rep(t(data.frame(MODE_Pre-Pre_Threshold_Temp)),length(df[df$Date==j &df$Pulse==k&df$Baseline==T,3])), ncol=15,byrow = T)
-        QC_Post[QC_Post$Date==j &QC_Post$Pulse==k,3:17]  <- df[df$Date==j &df$Pulse==k&df$Baseline==F,3:17]>=matrix(data= rep(MODE_Post+Post_Threshold_Temp,length(df[df$Date==j &df$Pulse==k&df$Baseline==F,3])),ncol=15, byrow=T)|df[df$Date==j &df$Pulse==k&df$Baseline==F,3:17]<=matrix(data= rep(MODE_Post-Post_Threshold_Temp,length(df[df$Date==j &df$Pulse==k&df$Baseline==F,3])),ncol=15, byrow=T)
-      }
-    }}
-  QAQC <- list(QC_Pre,QC_Post)
-  return(QAQC)
-}
+ df_mode <- aggregate(cbind(TREE1_TH1,TREE2_TH1,TREE3_TH1,TREE4_TH1,TREE5_TH1,TREE1_TH2,TREE2_TH2,TREE3_TH2,TREE4_TH2,TREE5_TH2,TREE1_TH3,TREE2_TH3,TREE3_TH3,TREE4_TH3,TREE5_TH3)~Date+Pulse+Baseline,df,getmode)
+ colnames(df_mode)[4:18] <- paste0(colnames(Tree_Blank),".mode")
+ df_comp <- merge(df,df_mode, by=c("Date","Pulse","Baseline"), all.x = T)
 
-# Replaces values that were flagged in the fine QAQC with NA
-##' Replaces values that were flagged in the fine QAQC with NA
-##' @name qaqc_remove
-##' @description Replaces values that were flagged in the fine QAQC with NA
-##' 
-##' @param df The input data frame
-##' @param Pre_QAQC_df PLACEHOLDER
-##' @param Post_QAQC_df PLACEHOLDER
-##' 
-##' @return qaqc_output_df The final dataframe with NA to indicate bad data
-##' @author Kenneth Davidson
-##' @export
-##' 
-qaqc_remove <- function(df,Pre_QAQC_df,Post_QAQC_df){
-  Z <- (sapply(Pre_QAQC_df[3:17],which))
-  X <- as.list(as.data.frame(sapply(Post_QAQC_df[3:17],which)))
-  df_1 <- df[df$Baseline==T,]
-  df_2 <- df[df$Baseline==F,]
-  for (i in colnames(df_1[,3:17])){
-    df_1[,i][Z[[i]]] <- NA
-  }
+ df_comp_pre <- df_comp[df_comp$Baseline==T,]
+ df_comp_post <- df_comp[df_comp$Baseline==F,]
+ 
+ 
+ Upper_Pre <- data.frame(df_comp_pre[,c("Date","TIMESTAMP","Baseline","Pulse")],df_comp_pre[,paste0(colnames(Tree_Blank),".mode")]+Pre_Threshold_Temp_Upper)
+ Lower_Pre <- data.frame(df_comp_pre[,c("Date","TIMESTAMP","Baseline","Pulse")],df_comp_pre[,paste0(colnames(Tree_Blank),".mode")]-Pre_Threshold_Temp_Lower)
+ Upper_Post <- data.frame(df_comp_post[,c("Date","TIMESTAMP","Baseline","Pulse")],df_comp_post[,paste0(colnames(Tree_Blank),".mode")]+Post_Threshold_Temp_Upper)
+ Lower_Post <- data.frame(df_comp_post[,c("Date","TIMESTAMP","Baseline","Pulse")],df_comp_post[,paste0(colnames(Tree_Blank),".mode")]-Post_Threshold_Temp_Lower)
+
+  QAQC_Upper <- rbind(Upper_Pre,Upper_Post)
+  QAQC_Lower <- rbind(Lower_Pre,Lower_Post)
   
-  for (i in colnames(df_2[,3:17])){
-    df_2[,i][X[[i]]] <- NA
+  colnames(QAQC_Upper)[5:19] <- colnames(Tree_Blank)
+  colnames(QAQC_Lower)[5:19] <- colnames(Tree_Blank)
+  QAQC_data <- df
+  
+  for(i in colnames(Tree_Blank)){
+  QAQC_data[,i] <- replace(QAQC_data[,i], QAQC_data[,i]>= QAQC_Upper[,i],values = NA)
+  QAQC_data[,i] <- replace(QAQC_data[,i], QAQC_data[,i]<= QAQC_Lower[,i],values = NA)
+  QAQC_data[,i] <- replace(QAQC_data[,i], is.na(QAQC_Upper[,i]),values = NA)
+  QAQC_data[,i] <- replace(QAQC_data[,i], is.na(QAQC_Lower[,i]),values = NA)
+  
   }
-  qaqc_output_df <- rbind(df_1,df_2)
-  return(qaqc_output_df)
+  QAQC_data_l <- list(QAQC_data,QAQC_Upper,QAQC_Lower)
+  return(QAQC_data_l)
 }

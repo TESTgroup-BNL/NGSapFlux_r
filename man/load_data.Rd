@@ -18,7 +18,7 @@ load_data(
 \item{End_DateTime}{e.g. 2030-01-01 01:00:00}
 }
 \value{
-unprocData
+A dataframe in standard format. These data are not yet processed or QAQCed
 }
 \description{
 function to load raw CR1000 data.

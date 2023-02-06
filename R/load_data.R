@@ -13,7 +13,7 @@
 ##' @param Origin_DateTime e.g. 2000-01-01 01:00:00
 ##' @param End_DateTime e.g. 2030-01-01 01:00:00
 ##' 
-##' @return unprocData
+##' @return A dataframe in standard format. These data are not yet processed or QAQCed
 ##' 
 ##' @author Kenneth Davidson
 ##' @author Jeremiah Anderson
@@ -33,13 +33,6 @@ load_data <- function(filepath, Origin_DateTime="2000-01-01 01:00:00", End_DateT
   unprocData[to_convert] <- lapply(unprocData[to_convert], convert_temp)
   unprocData$Date <- lubridate::date(unprocData$TIMESTAMP)
   unprocData <- unprocData[!is.na(unprocData$Date),]
-  #Full_Time_Range <- data.frame(TIMESTAMP=as.POSIXct(paste0(rep(unique(unprocData$Date), each=68400)," ", format(seq(as.POSIXct("00:00:01", format = "%T"), as.POSIXct("23:59:59", format = "%T"), by = "1 sec"), "%H:%M:%S")),tz="UTC"))
-  #Full_Time_Range$min <- lubridate::minute(Full_Time_Range$TIMESTAMP)
-  #Full_Time_Range <- Full_Time_Range[Full_Time_Range$min %in% c(0:14,30:44),]
-  #`%notin%` <- Negate(`%in%`)
-  #New_Dates <- data.frame(TIMESTAMP=Full_Time_Range[which(Full_Time_Range$TIMESTAMP %notin% unprocData$TIMESTAMP),"TIMESTAMP"])
-  #unprocData <- merge(unprocData,New_Dates, by="TIMESTAMP", all.x = T, all.y = T)
-  #unprocData$Date <- lubridate::date(unprocData$TIMESTAMP)
   unprocData$Min <- lubridate::minute(unprocData$TIMESTAMP)
   unprocData$Time <- hms::as_hms(unprocData$TIMESTAMP)
   unprocData$Baseline <- unprocData$Min %in% c(0,1,30,31)

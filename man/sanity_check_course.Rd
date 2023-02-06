@@ -34,7 +34,7 @@ A list composed of three QAQC data frames
 }
 \description{
 Course QAQC processing. Breaks each pulse interval into three periods, pre-pulse(00:00-02:00), heat (02:01-03:00), and post pre-pulse (02:01-15:00).
-Identifies and flags outliers as temperature readings that are greater than given amount above or below the mode temperature reading during that period.
+Identifies and flags outliers as temperature readings that are greater than a given amount above or below the mode temperature reading during that period.
 If the number of outliers are exceed a user specified minimum threshold, the whole period is flagged as bad.
 Data returned as TRUE indicates an error.
 }
