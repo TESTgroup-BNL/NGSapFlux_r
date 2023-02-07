@@ -27,13 +27,14 @@ getmode <- function(v) {
 } 
 
 ##' A helper function for Heat_Dis_Spline
-##' @name Spline_Fit
+##' @name spline_fit
+##' @description A helper function to fit a spline to a moving window of data. Used estimate baseline temp of sap post heatting
+##' for detection of full pulse duration. 
 ##' 
 ##' @author Kenneth Davidson
 ##' @export 
-Spline_Fit <- function(Y_vals,X_vals=Z$TIMESTAMP, X_Vals_New=X){
+spline_fit <- function(Y_vals,X_vals=Z$TIMESTAMP, X_Vals_New=X){
   Z1 <- smooth.spline(X_vals,Y_vals)
   Z2 <- predict(Z1, X_Vals_New)
   return(Z2$y)
-  
 }

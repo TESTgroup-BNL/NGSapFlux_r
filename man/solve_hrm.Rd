@@ -30,7 +30,7 @@ solve_hrm(
 \item{sensor_1_dist}{Distance in cm for sensor 1 from heater. Negative values are equivalent a position upstream of the heater.}
 }
 \value{
-Data frame with HRM processed data to half hour
+Data frame with HRM processed data to half hour. Values are in cm hr-1.
 }
 \description{
 Solves the HRM equations for sensors 1 and 2. K can either as a vector or assumed

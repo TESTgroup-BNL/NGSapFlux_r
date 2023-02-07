@@ -12,7 +12,7 @@
 ##' @param sensor_2_dist Distance in cm for sensor 2 from heater. Negative values are equivalent a position upstream of the heater.
 ##' @param sensor_1_dist Distance in cm for sensor 1 from heater. Negative values are equivalent a position upstream of the heater.
 ##'
-##' @return Data frame with HRM processed data to half hour
+##' @return Data frame with HRM processed data to half hour. Values are in cm hr-1.
 ##' 
 ##' @author Kenneth Davidson
 ##' @export
