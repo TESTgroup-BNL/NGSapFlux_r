@@ -18,7 +18,8 @@ load_data(
 \item{End_DateTime}{e.g. 2030-01-01 01:00:00}
 }
 \value{
-A dataframe in standard format. These data are not yet processed or QAQCed
+A dataframe in standard NGSapFlux_r format.
+These data are not yet processed or QAQC'ed
 }
 \description{
 function to load raw CR1000 data.
@@ -29,4 +30,6 @@ Can be changed to process all boxes from one directory preferred
 Kenneth Davidson
 
 Jeremiah Anderson
+
+Shawn Serbin
 }

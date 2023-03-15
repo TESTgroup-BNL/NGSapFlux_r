@@ -18,21 +18,32 @@ sanity_check_fine(
 
 \item{Dates}{The dates / date range to process}
 
-\item{Pre_Threshold_Temp_Upper}{Difference in mode temp (during the pre-pulse period) greater than which a point will be considered an outlier}
+\item{Pre_Threshold_Temp_Upper}{Difference in mode temp (during the pre-pulse
+period) greater than which a point will be considered an outlier}
 
-\item{Pre_Threshold_Temp_Lower}{Difference in mode temp (during the pre-pulse period) less than which a point will be considered an outlier}
+\item{Pre_Threshold_Temp_Lower}{Difference in mode temp (during the pre-pulse
+period) less than which a point will be considered an outlier}
 
-\item{Post_Threshold_Temp_Upper}{Difference in mode temp (during the post-pulse period) greater than which a point will be considered an outlier}
+\item{Post_Threshold_Temp_Upper}{Difference in mode temp (during the post-pulse
+period) greater than which a point will be considered an outlier}
 
-\item{Post_Threshold_Temp_Lower}{Difference in mode temp (during the post-pulse period) less than which a point will be considered an outlier}
+\item{Post_Threshold_Temp_Lower}{Difference in mode temp (during the post-pulse
+period) less than which a point will be considered an outlier}
 }
 \value{
-A list containing data frame with outlines removed (replaced by NA), and two data frames corresponding to the upper and lower temperature thresholds for each data point.
+A list containing data frame with outlines removed (replaced by NA),
+and two data frames corresponding to the upper and lower temperature
+thresholds for each data point.
 }
 \description{
-Fine QAQC processing. Breaks each pulse interval into two periods, pre-pulse(00:00-02:00), and post pre-pulse (02:01-15:00).
-Identifies and flags outliers as temperature readings that are exceed a user specified upper and lower threshold temperature reading during that period.
-Output is a list containing data frame with outlines removed, and two data frames corresponding to the upper and lower temperature thresholds for each data point.
+Fine QAQC processing. Breaks each pulse interval into two
+periods, pre-pulse(00:00-02:00), and post pre-pulse (02:01-15:00).
+Identifies and flags outliers as temperature readings that are exceed a
+user specified upper and lower threshold temperature reading during that
+period.
+Output is a list containing data frame with outlines removed, and two data
+frames corresponding to the upper and lower temperature thresholds for each
+data point.
 }
 \author{
 Kenneth Davidson

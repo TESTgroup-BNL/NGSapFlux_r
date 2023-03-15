@@ -1,6 +1,6 @@
 Package: ngsapflux
 Title: The NGSapFlux R data processing and analysis package
-Version: 0.1
+Version: 0.0.2
 Authors@R:
   c(person(given = "Kenneth",
            family = "Davidson",
