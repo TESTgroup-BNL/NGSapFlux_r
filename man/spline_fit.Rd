@@ -7,7 +7,8 @@
 spline_fit(Y_vals, X_vals = Z$TIMESTAMP, X_Vals_New = X)
 }
 \description{
-A helper function to fit a spline to a moving window of data. Used estimate baseline temp of sap post heatting
+A helper function to fit a spline to a moving window of data.
+Used estimate baseline temp of sap post heating
 for detection of full pulse duration.
 }
 \author{

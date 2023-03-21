@@ -19,13 +19,18 @@ sanity_check_coarse(
 
 \item{Dates}{The dates / date range to process}
 
-\item{Pre_Threshold_Temp}{Difference in temp from mode (during the pre-pulse period) greater than which a point will be considered an outlier}
+\item{Pre_Threshold_Temp}{Difference in temp from mode (during the pre-pulse
+period) greater than which a point will be considered an outlier}
 
-\item{Pre_Threshold_Num}{Minimum number of outliers during the pre-pulse period before data are flagged as bad}
+\item{Pre_Threshold_Num}{Minimum number of outliers during the pre-pulse
+period before data are flagged as bad}
 
-\item{Post_Threshold_Temp}{Difference in temp from mode (during the post-pulse period) greater than which a point will be considered an outlier}
+\item{Post_Threshold_Temp}{Difference in temp from mode
+(during the post-pulse period) greater than which a point will be
+considered an outlier}
 
-\item{Post_Threshold_Num}{Minimum number of outliers during the post-pulse period before data are flagged as bad}
+\item{Post_Threshold_Num}{Minimum number of outliers during the
+post-pulse period before data are flagged as bad}
 
 \item{HT_Temp}{Temperature threshold for detecting heater pulse}
 }
@@ -33,10 +38,13 @@ sanity_check_coarse(
 A list composed of three QAQC data frames
 }
 \description{
-Course QAQC processing. Breaks each pulse interval into three periods, pre-pulse(00:00-02:00), heat (02:01-03:00), and post pre-pulse (02:01-15:00).
-Identifies and flags outliers as temperature readings that are greater than a given amount above or below the mode temperature reading during that period.
-If the number of outliers are exceed a user specified minimum threshold, the whole period is flagged as bad.
-Data returned as TRUE indicates an error.
+Course QAQC processing. Breaks each pulse interval into three
+periods, pre-pulse(00:00-02:00), heat (02:01-03:00), and post-pulse
+(02:01-15:00). Identifies and flags outliers as temperature readings that
+are greater than a given amount above or below the mode temperature reading
+during that period. If the number of outliers are exceed a user specified
+minimum threshold, the whole period is flagged as bad. Data returned as TRUE
+indicates an error.
 }
 \author{
 Kenneth Davidson
