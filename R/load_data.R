@@ -43,7 +43,11 @@ load_data <- function(filepath, Origin_DateTime="2000-01-01 01:00:00",
                            & unprocData$TIMESTAMP <= as.POSIXct(End_DateTime,
                                                                 tz="UTC"),]
   unprocData[to_convert] <- lapply(unprocData[to_convert], as.numeric)
-  unprocData[to_convert] <- lapply(unprocData[to_convert], convert_temp)
+  #!! remove bad thermister data. expected that raw data < 0.9
+  #unprocData[to_convert][unprocData[to_convert] >=0.9] <- NA
+  #!!
+  unprocData[to_convert] <- lapply(unprocData[to_convert], 
+                                   ngsapflux::convert_temp)
   unprocData$Date <- lubridate::date(unprocData$TIMESTAMP)
   unprocData <- unprocData[!is.na(unprocData$Date),]
   unprocData$Min <- lubridate::minute(unprocData$TIMESTAMP)

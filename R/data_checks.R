@@ -30,13 +30,13 @@
 sanity_check_coarse <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp=0.5,
                                 Pre_Threshold_Num=20, Post_Threshold_Temp=5, 
                                 Post_Threshold_Num=10, HT_Temp=0.5){
-  
-  QC_Pre <- data.frame(Date= rep(as.character(Dates), each=48), 
-                       Pulse= rep(Pulses, times=length(Dates)),Tree_Blank)
-  QC_Post <- data.frame(Date= rep(as.character(Dates), each=48), 
-                        Pulse= rep(Pulses, times=length(Dates)),Tree_Blank)
-  QC_HT <- data.frame(Date= rep(as.character(Dates), each=48), 
-                      Pulse= rep(Pulses, times=length(Dates)),Heat_Blank)
+  # where is pulses coming from?
+  QC_Pre <- data.frame(Date = rep(as.character(Dates), each=48), 
+                       Pulse = rep(Pulses, times=length(Dates)), Tree_Blank)
+  QC_Post <- data.frame(Date = rep(as.character(Dates), each=48), 
+                        Pulse = rep(Pulses, times=length(Dates)), Tree_Blank)
+  QC_HT <- data.frame(Date = rep(as.character(Dates), each=48), 
+                      Pulse = rep(Pulses, times=length(Dates)), Heat_Blank)
   
   for (j in as.character(Dates)){
     for (k in Pulses){
@@ -75,7 +75,7 @@ sanity_check_coarse <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp=0.5,
 ##' @name sanity_check_fine
 ##' @description Fine QAQC processing. Breaks each pulse interval into two 
 ##' periods, pre-pulse(00:00-02:00), and post post-pulse (02:01-15:00).
-##' Identifies and flags outliers as temperature readings that are exceed a 
+##' Identifies and flags outliers as temperature readings that exceed a 
 ##' user specified upper and lower threshold temperature reading during that 
 ##' period. Output is a list containing data frame with outliers removed, and 
 ##' two data frames corresponding to the upper and lower temperature thresholds 
@@ -110,7 +110,8 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
  df_mode <- aggregate(cbind(TREE1_TH1,TREE2_TH1,TREE3_TH1,TREE4_TH1,TREE5_TH1,
                             TREE1_TH2,TREE2_TH2,TREE3_TH2,TREE4_TH2,TREE5_TH2,
                             TREE1_TH3,TREE2_TH3,TREE3_TH3,TREE4_TH3,
-                            TREE5_TH3)~Date+Pulse+Baseline,df,getmode)
+                            TREE5_TH3)~Date+Pulse+Baseline,df,ngsapflux::getmode)
+ # Tree_Blank comes from the data.R data definitions 
  colnames(df_mode)[4:18] <- paste0(colnames(Tree_Blank),".mode")
  df_comp <- merge(df,df_mode, by=c("Date","Pulse","Baseline"), all.x = T)
 

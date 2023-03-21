@@ -29,56 +29,117 @@ if (output_dir=="tempdir") {
 setwd(outdir) # set working directory
 getwd()  # check wd
 
-BoxA <- ngsapflux::load_data(Path_A, Origin_DateTime="2022-09-07 00:00:00", End_DateTime = "2022-09-07 23:59:59")
-BoxA <- ngsapflux::load_data(Path_A, Origin_DateTime="2022-09-08 00:00:00", End_DateTime = "2022-09-08 23:59:59")
-BoxA <- ngsapflux::load_data(Path_A, Origin_DateTime="2022-09-09 00:00:00", End_DateTime = "2022-09-09 23:59:59")
-BoxA <- ngsapflux::load_data(Path_A, Origin_DateTime="2022-09-10 00:00:00", End_DateTime = "2022-09-10 23:59:59")
 
+# I would stick to a week or less of data. Some of the functions slow way down when given a large date range.
+#date1 <- "2022-09-05 00:00:00"
+#date2 <- "2022-09-10 23:59:59"
 
-BoxA <- ngsapflux::load_data(Path_A, Origin_DateTime="2022-09-05 00:00:00", End_DateTime = "2022-09-10 23:59:59")
+date1 <- "2022-09-06 00:00:00"
+date2 <- "2022-09-06 23:59:59"
+inputdata <- ngsapflux::load_data(Path_A, Origin_DateTime = date1, 
+                                  End_DateTime = date2)
 
 # filepath <- Path_A
 # Origin_DateTime="2022-09-05 00:00:00"
 # End_DateTime = "2022-09-10 23:59:59"
 # unprocData
 
-summary(BoxA)
+summary(inputdata)
 
-unique(BoxA$Date)
-
-ggplot(BoxA, aes(Time, TREE1_TH1)) + geom_point(aes(color="bottom"))+geom_point(aes(Time, TREE1_TH2,color="middle"))+geom_point(aes(Time, TREE1_TH3,color="top"))+ggtitle("Tree 1")+
-  scale_color_manual(name = "sensor",values = c( "top" = "blue", "middle" = "red", "bottom" = "black"),
-                     labels = c("top", "middle", "bottom"))
+unique(inputdata$Date)
 
 
-QAQC_coarse <- sanity_check_coarse(BoxA)
-names(QAQC_coarse)
-QC_Pre <- QAQC_coarse[[1]]
-QC_Post <- QAQC_coarse[[2]]
-QC_HT <- QAQC_coarse[[3]]
+# interim QAQC functions
+#The threshold temps can be modified for more or less precision in QAQC 
+Data_QAQC <-sanity_check_fine(inputdata,Dates=unique(inputdata$Date),
+                              0.02,0.02,5,1)
+#Data_QA is a list of three data frames. 
+#The object is the data with bad values as NA. The second two items are the 
+#data frame with values above and below the threshold makred as NA
+Data_HRM <- solve_hrm(Data_QAQC[[1]]) 
 
-QAQC_fine <- sanity_check_fine(BoxA)
-QC_Pre_Fine <- QAQC_fine[[1]]
-QC_Post_Fine <- QAQC_fine[[2]]
-QC_HT_Fine <- QAQC_fine[[3]]
+# Plot the raw data
+#!! make this dynamic so you can change treenum and alter plot
+#treenum = "TREE1"
+for (i in seq_along(1:5)) {
+  print(paste0("TREE",i))
+  treenum <- paste0("TREE",i)
+  rawdataplot <- ggplot(inputdata, aes(Time, .data[[paste0(treenum,"_TH1")]])) + 
+    geom_point(aes(color="bottom")) + 
+    geom_point(aes(Time, .data[[paste0(treenum,"_TH2")]], color="middle")) + 
+    geom_point(aes(Time, .data[[paste0(treenum,"_TH3")]], color="top")) + 
+    ggtitle(treenum)+
+    scale_color_manual(name = "sensor",values = c( "top" = "blue", 
+                                                   "middle" = "red", 
+                                                   "bottom" = "black"),
+                       labels = c("top", "middle", "bottom")) + 
+    facet_wrap(~Date, scales = "free_x") + theme(legend.position ="bottom") + 
+    ylab(expression("Temperature ("*~degree*C*")"))
+    
+  ggsave(filename = file.path(outdir,paste0(lubridate::as_date(date1),"_",
+                                            lubridate::as_date(date2),"_",
+                                            treenum,
+                                            "_raw_data.png")), 
+         plot = rawdataplot, 
+         device="png", width = 35, 
+         height = 14, units = "cm",
+         dpi = 300)
+  
+  # remove previous plot
+  rm(rawdataplot)
+}
 
-BoxA_QAQC <- QAQC_Remove(BoxA,QC_Pre_Fine[3:17],QC_Post_Fine)
+# OR
+# ggplot(inputdata, aes(Time, get(paste0(treenum,"_TH1"))))
 
-ggplot(QC_Pre_Fine, aes(Time, TREE1_TH1)) + geom_point(aes(color="bottom"))+geom_point(aes(Time, TREE1_TH2,color="middle"))+geom_point(aes(Time, TREE1_TH3,color="top"))+ggtitle("Tree 1")+
-  scale_color_manual(name = "sensor",values = c( "top" = "blue", "middle" = "red", "bottom" = "black"),
-                     labels = c("top", "middle", "bottom"))
+# Plot the QAQC data
+for (i in seq_along(1:5)) {
+  print(paste0("TREE",i))
+  treenum <- paste0("TREE",i)
+  qaqc_data_plot <- ggplot(Data_QAQC[[1]], aes(Time, 
+                                               .data[[paste0(treenum,"_TH1")]])) + 
+    geom_point(aes(color="bottom")) + 
+    geom_point(aes(Time, .data[[paste0(treenum,"_TH2")]], color="middle")) + 
+    geom_point(aes(Time, .data[[paste0(treenum,"_TH3")]], color="top")) + 
+    ggtitle(treenum)+
+    scale_color_manual(name = "sensor",values = c( "top" = "blue", 
+                                                   "middle" = "red", 
+                                                   "bottom" = "black"),
+                       labels = c("top", "middle", "bottom")) + 
+    facet_wrap(~Date,scales = "free_x")+theme(legend.position ="bottom") + 
+    ylab(expression("Temperature ("*~degree*C*")"))
+  
+  ggsave(filename = file.path(outdir,paste0(lubridate::as_date(date1),"_",
+                                            lubridate::as_date(date2),"_",
+                                            treenum,
+                                            "_qaqc_data.png")), 
+         plot = qaqc_data_plot, 
+         device="png", width = 35, 
+         height = 14, units = "cm",
+         dpi = 300)
+  rm(rawdataplot)
+}
 
-ggplot(QC_Post_Fine, aes(TIMESTAMP, TREE1_TH1)) + geom_point(aes(color="bottom"))+geom_point(aes(TIMESTAMP, TREE1_TH2,color="middle"))+geom_point(aes(TIMESTAMP, TREE1_TH3,color="top"))+ggtitle("Tree 1")+
-  scale_color_manual(name = "sensor",values = c( "top" = "blue", "middle" = "red", "bottom" = "black"),
-                     labels = c("top", "middle", "bottom"))
 
-ggplot(QC_HT_Fine, aes(TIMESTAMP, TREE1_TH1)) + geom_point(aes(color="bottom"))+geom_point(aes(TIMESTAMP, TREE1_TH2,color="middle"))+geom_point(aes(TIMESTAMP, TREE1_TH3,color="top"))+ggtitle("Tree 1")+
-  scale_color_manual(name = "sensor",values = c( "top" = "blue", "middle" = "red", "bottom" = "black"),
-                     labels = c("top", "middle", "bottom"))
-
-C <- heat_dis_spline(QC_Pre_Fine)
-Baseline <- C[[1]]
-Heat_Increase_spline <- C[[2]]
-Heat_Pulse <- C[[3]]
-Cool_Time <- C[[4]]
-
+# Plot the HRM data (sap velocity in cm/hr)
+for (i in seq_along(1:5)) {
+  print(paste0("TREE",i))
+  treenum <- paste0("TREE",i)
+  hrmplot <- ggplot(Data_HRM, aes(Time,.data[[paste0(treenum)]])) + 
+    geom_point()+facet_wrap(~Date) +
+    ylab("Sap Velocity cm/hr")+ggtitle("Tree 1") + 
+    scale_x_discrete(breaks=c("03:00","06:00","09:00","12:00","15:00","18:00",
+                              "21:00"),labels=c("03:00","6:00","09:00","12:00",
+                                                "15:00","18:00","21:00"))
+  ggsave(filename = file.path(outdir,paste0(lubridate::as_date(date1),"_",
+                                            lubridate::as_date(date2),"_",
+                                            treenum,
+                                            "_HRM_sapvelocity.png")), 
+         plot = hrmplot, 
+         device="png", width = 35, 
+         height = 14, units = "cm",
+         dpi = 300)
+  
+  rm(hrmplot)
+  
+}
