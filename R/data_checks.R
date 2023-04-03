@@ -133,7 +133,9 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
                             Post_Threshold_Temp_Lower)
 
   QAQC_Upper <- rbind(Upper_Pre,Upper_Post)
+  QAQC_Upper<- QAQC_Upper[order(QAQC_Upper$TIMESTAMP),]
   QAQC_Lower <- rbind(Lower_Pre,Lower_Post)
+  QAQC_Lower<- QAQC_Lower[order(QAQC_Lower$TIMESTAMP),]
   
   colnames(QAQC_Upper)[5:19] <- colnames(Tree_Blank)
   colnames(QAQC_Lower)[5:19] <- colnames(Tree_Blank)
