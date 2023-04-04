@@ -116,7 +116,7 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
                             TREE5_TH3)~Date+Pulse+Baseline,df,ngsapflux::getmode)
  
  df_Heat <- aggregate(cbind(TREE1_TH2,TREE2_TH2,TREE3_TH2,TREE4_TH2,TREE5_TH2)~Date+Pulse,df[df$Heat==T,],max)
- df_Heat_Base <- df_mode[df_mode$Baseline==T,c(1,2,9:14)]
+ df_Heat_Base <- df_mode[df_mode$Baseline==T,c(1,2,9:13)]
  # Tree_Blank comes from the data.R data definitions 
  colnames(df_mode)[4:18] <- paste0(colnames(Tree_Blank),".mode")
  colnames(df_Heat)[3:7] <- paste0(colnames(Heat_Blank))
