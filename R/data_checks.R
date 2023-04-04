@@ -93,6 +93,8 @@ sanity_check_coarse <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp=0.5,
 ##' period) greater than which a point will be considered an outlier
 ##' @param Post_Threshold_Temp_Lower Difference in mode temp (during the post-pulse 
 ##' period) less than which a point will be considered an outlier
+##' @param Heat_Threshold_Temp Value which when added to mode of the
+##' pre-pulse period becomes the threshold over which the max temp observed during heat pulse  must pass for the heater to be considered working
 ##' 
 ##' @return A list containing data frame with outlines removed (replaced by NA), 
 ##' and two data frames corresponding to the upper and lower temperature 
@@ -105,15 +107,23 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
                               Pre_Threshold_Temp_Upper=0.2, 
                               Pre_Threshold_Temp_Lower=0.2,
                               Post_Threshold_Temp_Upper=5, 
-                              Post_Threshold_Temp_Lower=0.2) {
+                              Post_Threshold_Temp_Lower=0.2,
+                              Heat_Threshold_Temp=0.5) {
   
  df_mode <- aggregate(cbind(TREE1_TH1,TREE2_TH1,TREE3_TH1,TREE4_TH1,TREE5_TH1,
                             TREE1_TH2,TREE2_TH2,TREE3_TH2,TREE4_TH2,TREE5_TH2,
                             TREE1_TH3,TREE2_TH3,TREE3_TH3,TREE4_TH3,
                             TREE5_TH3)~Date+Pulse+Baseline,df,ngsapflux::getmode)
+ 
+ df_Heat <- aggregate(cbind(TREE1_TH2,TREE2_TH2,TREE3_TH2,TREE4_TH2,TREE5_TH2)~Date+Pulse,df[df$Heat==T,],max)
+ df_Heat_Base <- df_mode[df_mode$Baseline==T,c(1,2,9:14)]
  # Tree_Blank comes from the data.R data definitions 
  colnames(df_mode)[4:18] <- paste0(colnames(Tree_Blank),".mode")
+ colnames(df_Heat)[3:7] <- paste0(colnames(Heat_Blank))
+ colnames(df_Heat_Base)[3:7] <- paste0(colnames(Heat_Blank))
+ 
  df_comp <- merge(df,df_mode, by=c("Date","Pulse","Baseline"), all.x = T)
+
 
  df_comp_pre <- df_comp[df_comp$Baseline==T,]
  df_comp_post <- df_comp[df_comp$Baseline==F,]
@@ -131,6 +141,9 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
  Lower_Post <- data.frame(df_comp_post[,c("Date","TIMESTAMP","Baseline","Pulse")],
                           df_comp_post[,paste0(colnames(Tree_Blank),".mode")]-
                             Post_Threshold_Temp_Lower)
+ 
+ QC_HT <- data.frame(Date = rep(as.character(Dates), each=48), 
+                     Pulse = rep(Pulses, times=length(Dates)), Heat_Blank)
 
   QAQC_Upper <- rbind(Upper_Pre,Upper_Post)
   QAQC_Upper<- QAQC_Upper[order(QAQC_Upper$TIMESTAMP),]
@@ -148,8 +161,27 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
                            values = NA)
   QAQC_data[,i] <- replace(QAQC_data[,i], is.na(QAQC_Upper[,i]),values = NA)
   QAQC_data[,i] <- replace(QAQC_data[,i], is.na(QAQC_Lower[,i]),values = NA)
-  
+  QAQC_data[,i] <- replace(QAQC_data[,i], QAQC_data[,i]<=0,values = NA)
   }
+  
+  for(i in colnames(Heat_Blank)){
+    QC_HT[,i] <- replace(QC_HT[,i], df_Heat[,i]>= df_Heat_Base[,i]+Heat_Threshold_Temp,
+                             values = "Good")
+    
+    QC_HT[,i] <- replace(QC_HT[,i], df_Heat[,i]<= df_Heat_Base[,i]+Heat_Threshold_Temp,
+                         values = "Bad")
+  }
+  
+  
+  QAQC_data <- merge(QAQC_data,QC_HT, by=c("Date","Pulse"), all.x = T)  
+  
+  QAQC_data[QAQC_data$HT1=="Bad",c("TREE1_TH1","TREE1_TH2","TREE1_TH3")] <- NA  
+  QAQC_data[QAQC_data$HT2=="Bad",c("TREE2_TH1","TREE2_TH2","TREE2_TH3")] <- NA  
+  QAQC_data[QAQC_data$HT3=="Bad",c("TREE3_TH1","TREE3_TH2","TREE3_TH3")] <- NA  
+  QAQC_data[QAQC_data$HT4=="Bad",c("TREE4_TH1","TREE4_TH2","TREE4_TH3")] <- NA  
+  QAQC_data[QAQC_data$HT5=="Bad",c("TREE5_TH1","TREE5_TH2","TREE5_TH3")] <- NA  
+  
+  
   QAQC_data_l <- list(QAQC_data,QAQC_Upper,QAQC_Lower)
   return(QAQC_data_l)
 }

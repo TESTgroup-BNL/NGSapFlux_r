@@ -10,7 +10,8 @@ sanity_check_fine(
   Pre_Threshold_Temp_Upper = 0.2,
   Pre_Threshold_Temp_Lower = 0.2,
   Post_Threshold_Temp_Upper = 5,
-  Post_Threshold_Temp_Lower = 0.2
+  Post_Threshold_Temp_Lower = 0.2,
+  Heat_Threshold_Temp = 0.5
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ period) greater than which a point will be considered an outlier}
 
 \item{Post_Threshold_Temp_Lower}{Difference in mode temp (during the post-pulse
 period) less than which a point will be considered an outlier}
+
+\item{Heat_Threshold_Temp}{Value which when added to mode of the
+pre-pulse period becomes the threshold over which the max temp observed during heat pulse  must pass for the heater to be considered working}
 }
 \value{
 A list containing data frame with outlines removed (replaced by NA),
