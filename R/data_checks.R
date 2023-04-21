@@ -97,8 +97,9 @@ sanity_check_coarse <- function(df,Dates=unique(df$Date),Pre_Threshold_Temp=0.5,
 ##' pre-pulse period becomes the threshold over which the max temp observed during heat pulse  must pass for the heater to be considered working
 ##' 
 ##' @return A list containing data frame with outlines removed (replaced by NA), 
-##' and two data frames corresponding to the upper and lower temperature 
-##' thresholds for each data point.
+##' two data frames corresponding to the upper and lower temperature 
+##' thresholds for each data point, and a data frame listing the status of each heater (Good/Bad)
+##' for each pulse and date.
 ##' 
 ##' @author Kenneth Davidson
 ##' @export
@@ -110,6 +111,7 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
                               Post_Threshold_Temp_Lower=0.2,
                               Heat_Threshold_Temp=0.5) {
   
+ df <- df[df$Date %in% lubridate::date(Dates),]
  df_mode <- aggregate(cbind(TREE1_TH1,TREE2_TH1,TREE3_TH1,TREE4_TH1,TREE5_TH1,
                             TREE1_TH2,TREE2_TH2,TREE3_TH2,TREE4_TH2,TREE5_TH2,
                             TREE1_TH3,TREE2_TH3,TREE3_TH3,TREE4_TH3,
@@ -153,6 +155,7 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
   colnames(QAQC_Upper)[5:19] <- colnames(Tree_Blank)
   colnames(QAQC_Lower)[5:19] <- colnames(Tree_Blank)
   QAQC_data <- df
+  QAQC_data <- QAQC_data[order(QAQC_data$TIMESTAMP),]
   
   for(i in colnames(Tree_Blank)){
   QAQC_data[,i] <- replace(QAQC_data[,i], QAQC_data[,i]>= QAQC_Upper[,i],
@@ -163,6 +166,11 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
   QAQC_data[,i] <- replace(QAQC_data[,i], is.na(QAQC_Lower[,i]),values = NA)
   QAQC_data[,i] <- replace(QAQC_data[,i], QAQC_data[,i]<=0,values = NA)
   }
+  
+  QC_HT <- QC_HT[order(QC_HT$Date,QC_HT$Pulse),]
+  df_Heat <- df_Heat[order(df_Heat$Date,df_Heat$Pulse),]
+  df_Heat_Base <- df_Heat_Base[order(df_Heat_Base$Date,df_Heat_Base$Pulse),]
+  
   
   for(i in colnames(Heat_Blank)){
     QC_HT[,i] <- replace(QC_HT[,i], df_Heat[,i]>= df_Heat_Base[,i]+Heat_Threshold_Temp,
@@ -182,7 +190,7 @@ sanity_check_fine <- function(df, Dates=unique(df$Date),
   QAQC_data[QAQC_data$HT5=="Bad",c("TREE5_TH1","TREE5_TH2","TREE5_TH3")] <- NA  
   
   
-  QAQC_data_l <- list(QAQC_data,QAQC_Upper,QAQC_Lower)
+  QAQC_data_l <- list(QAQC_data,QAQC_Upper,QAQC_Lower,QC_HT)
   return(QAQC_data_l)
 }
 ### EOF

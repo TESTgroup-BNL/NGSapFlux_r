@@ -36,8 +36,9 @@ pre-pulse period becomes the threshold over which the max temp observed during h
 }
 \value{
 A list containing data frame with outlines removed (replaced by NA),
-and two data frames corresponding to the upper and lower temperature
-thresholds for each data point.
+two data frames corresponding to the upper and lower temperature
+thresholds for each data point, and a data frame listing the status of each heater (Good/Bad)
+for each pulse and date.
 }
 \description{
 Fine QAQC processing. Breaks each pulse interval into two
