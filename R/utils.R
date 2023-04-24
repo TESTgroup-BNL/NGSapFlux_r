@@ -57,3 +57,30 @@ QAQC_Remove <- function(df,Pre_QAQC_df,Post_QAQC_df){
   df_3 <- rbind(df_1,df_2)
   return(df_3)
 }
+
+##' A helper function for baseline
+##' @name find_nearest
+##' @description A helper function which finds the nearest non-NA value and applies it 
+##' 
+##' @author https://stackoverflow.com/a/10081991
+##' @export 
+
+find_nearest <- function(dat) {
+  N <- length(dat)
+  na.pos <- which(is.na(dat))
+  if (length(na.pos) %in% c(0, N)) {
+    return(dat)
+  }
+  non.na.pos <- which(!is.na(dat))
+  intervals  <- findInterval(na.pos, non.na.pos,
+                             all.inside = TRUE)
+  left.pos   <- non.na.pos[pmax(1, intervals)]
+  right.pos  <- non.na.pos[pmin(N, intervals+1)]
+  left.dist  <- na.pos - left.pos
+  right.dist <- right.pos - na.pos
+  
+  dat[na.pos] <- ifelse(left.dist <= right.dist,
+                        dat[left.pos], dat[right.pos])
+  return(dat)
+}
+
