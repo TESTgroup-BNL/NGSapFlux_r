@@ -9,7 +9,7 @@
 ##' @param df Data frame containing velocity data as produced by solve_hrm()
 ##' @param baseline_length Optional minimum length for a baseline period to be considered (default 4 hours)
 ##' @param met_data Data frame containing met data at half hourly intervals (e.g., 10:00:00, 10:30:00, 11:00:00). 
-##' Required columns are Timestamp (format YYYY-MM-DD HH:MM:SS, in either UTC or local time), Tair (ºC),
+##' Required columns are Timestamp (POSIXct format: YYYY-MM-DD HH:MM:SS, in either UTC or local time), Tair (ºC),
 ##' PAR (W m-2 or µmol m-2 s-1), RH (%), and optionally VPDair (kPa)
 ##' @param tz local timezone for the data
 ##' 
@@ -21,7 +21,7 @@
 
 baseline <- function(df,baseline_length=4,met_data, tz="UTC"){
 
-  met_data$Timestamp <- as.POSIXct(lubridate::ymd_hms(met_data$Timestamp, tz="UTC"))
+  met_data$Timestamp <- with_tz(met_data$Timestamp, tz="UTC")
   df$Timestamp <- as.POSIXct(lubridate::ymd_hm(paste0(df$Date," ",df$Time)))
   df_merge <-merge(met_data, df, by="Timestamp", all.y=T, all.x=F)
   df_merge$Timestamp <- with_tz(df_merge$Timestamp, tz=tz)

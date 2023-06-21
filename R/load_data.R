@@ -34,7 +34,7 @@ load_data <- function(filepath, Origin_DateTime="2000-01-01 01:00:00",
                          "TREE3_TH1", "TREE4_TH1", "TREE5_TH1",
                          "TREE1_TH2", "TREE2_TH2", "TREE3_TH2", "TREE4_TH2", 
                          "TREE5_TH2", "TREE1_TH3", "TREE2_TH3", 
-                         "TREE3_TH3", "TREE4_TH3", "TREE5_TH3", "HT_START")
+                         "TREE3_TH3", "TREE4_TH3", "TREE5_TH3", "Volt", "HT_START")
   
   to_convert <- grep("TREE", names(unprocData))
   unprocData$TIMESTAMP <- lubridate::ymd_hms(unprocData$TIMESTAMP, tz="UTC")

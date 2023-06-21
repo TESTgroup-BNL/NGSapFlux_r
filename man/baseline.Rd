@@ -12,7 +12,7 @@ baseline(df, baseline_length = 4, met_data, tz = "UTC")
 \item{baseline_length}{Optional minimum length for a baseline period to be considered (default 4 hours)}
 
 \item{met_data}{Data frame containing met data at half hourly intervals (e.g., 10:00:00, 10:30:00, 11:00:00).
-Required columns are Timestamp (format YYYY-MM-DD HH:MM:SS, in either UTC or local time), Tair (ºC),
+Required columns are Timestamp (POSIXct format: YYYY-MM-DD HH:MM:SS, in either UTC or local time), Tair (ºC),
 PAR (W m-2 or µmol m-2 s-1), RH (\%), and optionally VPDair (kPa)}
 
 \item{tz}{local timezone for the data}
