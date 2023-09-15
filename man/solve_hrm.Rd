@@ -10,8 +10,7 @@ solve_hrm(
   ktherm = rep(0.0025, 5),
   tavg_start = rep(200, 5),
   tavg_end = rep(900, 5),
-  sensor_2_dist = rep(0.2, 5),
-  sensor_1_dist = rep(-0.2, 5)
+  selected_sensors = "1_2"
 )
 }
 \arguments{
@@ -24,6 +23,8 @@ solve_hrm(
 \item{tavg_start}{Beginning of averaging window, equivalent to seconds since start observations. Nominally the heat pulse will occur at/around 180. Supplied as a vector of five values corresponding to Trees 1-5.}
 
 \item{tavg_end}{End of averaging window, equivalent to seconds since start observations. Nominally the observations will run for 900 seconds. Supplied as a vector of five values corresponding to Trees 1-5.}
+
+\item{selected_sensors}{Which two sensors you want the equation to use. For example "1_2" uses the lower and middle probes while "2_3" usese the middle and upper probes.}
 
 \item{sensor_2_dist}{Distance in cm for sensor 2 from heater. Negative values are equivalent a position upstream of the heater.}
 
