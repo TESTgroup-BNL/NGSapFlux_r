@@ -20,7 +20,7 @@ solve_hrm(
 
 \item{ktherm}{Wood thermal diffusivity. Supplied as a vector of five values corresponding to Trees 1-5.}
 
-\item{tavg_start}{Beginning of averaging window, equivalent to seconds since start observations. Nominally the heat pulse will occur at/around 180. Supplied as a vector of five values corresponding to Trees 1-5.}
+\item{tavg_start}{Beginning of averaging window, equivalent to seconds since start observations. Nominally the heat pulse will occur at/around 120. Supplied as a vector of five values corresponding to Trees 1-5.}
 
 \item{tavg_end}{End of averaging window, equivalent to seconds since start observations. Nominally the observations will run for 900 seconds. Supplied as a vector of five values corresponding to Trees 1-5.}
 

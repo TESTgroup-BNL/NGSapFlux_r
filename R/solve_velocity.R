@@ -7,7 +7,7 @@
 ##' @param df 
 ##' @param Dates The dates / date range to process. If omitted all data in df will be processed.
 ##' @param ktherm Wood thermal diffusivity. Supplied as a vector of five values corresponding to Trees 1-5.
-##' @param tavg_start Beginning of averaging window, equivalent to seconds since start observations. Nominally the heat pulse will occur at/around 180. Supplied as a vector of five values corresponding to Trees 1-5.
+##' @param tavg_start Beginning of averaging window, equivalent to seconds since start observations. Nominally the heat pulse will occur at/around 120. Supplied as a vector of five values corresponding to Trees 1-5.
 ##' @param tavg_end End of averaging window, equivalent to seconds since start observations. Nominally the observations will run for 900 seconds. Supplied as a vector of five values corresponding to Trees 1-5.
 ##' @param selected_sensors Which two sensors you want the equation to use. For example "1_2" uses the lower and middle probes while "2_3" usese the middle and upper probes. 
 ##' @param sensor_2_dist Distance in cm for sensor 2 from heater. Negative values are equivalent a position upstream of the heater.
@@ -40,25 +40,25 @@ solve_hrm <- function(df,
         
         
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE1"] <- mean(2*(ktherm[1]/(0.4-0.2))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE1_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE1_TH3)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE1_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE1_TH2))+
-                                                                 (0.6/(2*(tavg_start[1]-180):(tavg_end[1]-180))),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE1_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE1_TH3)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE1_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE1_TH2))+
+                                                                 (0.6/(2*(tavg_start[1]-120):(tavg_end[1]-120))),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE2"] <- mean(2*(ktherm[1]/(0.4-0.2))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE2_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE2_TH3)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE2_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE2_TH2))+
-                                                                 (0.6/(2*(tavg_start[2]-180):(tavg_end[2]-180))),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE2_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE2_TH3)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE2_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE2_TH2))+
+                                                                 (0.6/(2*(tavg_start[2]-120):(tavg_end[2]-120))),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE3"] <- mean(2*(ktherm[1]/(0.4-0.2))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE3_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE3_TH3)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE3_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE3_TH2))+
-                                                                 (0.6/(2*(tavg_start[3]-180):(tavg_end[3]-180))),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE3_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE3_TH3)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE3_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE3_TH2))+
+                                                                 (0.6/(2*(tavg_start[3]-120):(tavg_end[3]-120))),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE4"] <- mean(2*(ktherm[1]/(0.4-0.2))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE4_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE4_TH3)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE4_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE4_TH2))+
-                                                                 (0.6/(2*(tavg_start[4]-180):(tavg_end[4]-180))),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE4_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE4_TH3)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE4_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE4_TH2))+
+                                                                 (0.6/(2*(tavg_start[4]-120):(tavg_end[4]-120))),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE5"] <- mean(2*(ktherm[1]/(0.4-0.2))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE5_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE5_TH3)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE5_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE5_TH2))+
-                                                                 (0.6/(2*(tavg_start[5]-180):(tavg_end[5]-180))),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE5_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE5_TH3)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE5_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE5_TH2))+
+                                                                 (0.6/(2*(tavg_start[5]-120):(tavg_end[5]-120))),na.rm=TRUE)*3600
       }
     }
     
@@ -71,25 +71,25 @@ solve_hrm <- function(df,
         BaseTemp <- data.frame(as.list(colMeans(Sub[,c("TREE1_TH1", "TREE2_TH1" ,"TREE3_TH1" ,"TREE4_TH1" ,"TREE5_TH1" ,"TREE1_TH2" ,"TREE2_TH2" ,"TREE3_TH2" ,"TREE4_TH2" ,"TREE5_TH2" ,"TREE1_TH3", "TREE2_TH3" ,"TREE3_TH3" ,"TREE4_TH3","TREE5_TH3")])))
         
     HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE1"] <- mean(2*(ktherm[1]/(0.4-(-0.2)))*
-                                                             log((df[df$Date==i&df$Pulse==k,"TREE1_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE1_TH3)/
-                                                                   (df[df$Date==i&df$Pulse==k,"TREE1_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE1_TH1))+
-                                                             (0.2/(2*(tavg_start[1]-180):(tavg_end[1]-180))),na.rm=TRUE)*3600
+                                                             log((df[df$Date==i&df$Pulse==k,"TREE1_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE1_TH3)/
+                                                                   (df[df$Date==i&df$Pulse==k,"TREE1_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE1_TH1))+
+                                                             (0.2/(2*(tavg_start[1]-120):(tavg_end[1]-120))),na.rm=TRUE)*3600
     HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE2"] <- mean(2*(ktherm[1]/(0.4-(-0.2)))*
-                                                             log((df[df$Date==i&df$Pulse==k,"TREE2_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE2_TH3)/
-                                                                   (df[df$Date==i&df$Pulse==k,"TREE2_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE2_TH1))+
-                                                             (0.2/(2*(tavg_start[2]-180):(tavg_end[2]-180))),na.rm=TRUE)*3600
+                                                             log((df[df$Date==i&df$Pulse==k,"TREE2_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE2_TH3)/
+                                                                   (df[df$Date==i&df$Pulse==k,"TREE2_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE2_TH1))+
+                                                             (0.2/(2*(tavg_start[2]-120):(tavg_end[2]-120))),na.rm=TRUE)*3600
     HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE3"] <- mean(2*(ktherm[1]/(0.4-(-0.2)))*
-                                                             log((df[df$Date==i&df$Pulse==k,"TREE3_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE3_TH3)/
-                                                                   (df[df$Date==i&df$Pulse==k,"TREE3_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE3_TH1))+
-                                                             (0.2/(2*(tavg_start[3]-180):(tavg_end[3]-180))),na.rm=TRUE)*3600
+                                                             log((df[df$Date==i&df$Pulse==k,"TREE3_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE3_TH3)/
+                                                                   (df[df$Date==i&df$Pulse==k,"TREE3_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE3_TH1))+
+                                                             (0.2/(2*(tavg_start[3]-120):(tavg_end[3]-120))),na.rm=TRUE)*3600
     HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE4"] <- mean(2*(ktherm[1]/(0.4-(-0.2)))*
-                                                             log((df[df$Date==i&df$Pulse==k,"TREE4_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE4_TH3)/
-                                                                   (df[df$Date==i&df$Pulse==k,"TREE4_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE4_TH1))+
-                                                             (0.2/(2*(tavg_start[4]-180):(tavg_end[4]-180))),na.rm=TRUE)*3600
+                                                             log((df[df$Date==i&df$Pulse==k,"TREE4_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE4_TH3)/
+                                                                   (df[df$Date==i&df$Pulse==k,"TREE4_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE4_TH1))+
+                                                             (0.2/(2*(tavg_start[4]-120):(tavg_end[4]-120))),na.rm=TRUE)*3600
     HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE5"] <- mean(2*(ktherm[1]/(0.4-(-0.2)))*
-                                                             log((df[df$Date==i&df$Pulse==k,"TREE5_TH3"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE5_TH3)/
-                                                                   (df[df$Date==i&df$Pulse==k,"TREE5_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE5_TH1))+
-                                                             (0.2/(2*(tavg_start[5]-180):(tavg_end[5]-180))),na.rm=TRUE)*3600
+                                                             log((df[df$Date==i&df$Pulse==k,"TREE5_TH3"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE5_TH3)/
+                                                                   (df[df$Date==i&df$Pulse==k,"TREE5_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE5_TH1))+
+                                                             (0.2/(2*(tavg_start[5]-120):(tavg_end[5]-120))),na.rm=TRUE)*3600
       }
       }
     
@@ -101,20 +101,20 @@ solve_hrm <- function(df,
         BaseTemp <- data.frame(as.list(colMeans(Sub[,c("TREE1_TH1", "TREE2_TH1" ,"TREE3_TH1" ,"TREE4_TH1" ,"TREE5_TH1" ,"TREE1_TH2" ,"TREE2_TH2" ,"TREE3_TH2" ,"TREE4_TH2" ,"TREE5_TH2" ,"TREE1_TH3", "TREE2_TH3" ,"TREE3_TH3" ,"TREE4_TH3","TREE5_TH3")])))
         
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE1"] <- mean(2*(ktherm[1]/(0.2-(-0.2)))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE1_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE1_TH2)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE1_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE1_TH1)),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE1_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE1_TH2)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE1_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE1_TH1)),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE2"] <- mean(2*(ktherm[2]/(0.2-(-0.2)))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE2_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE2_TH2)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE2_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE2_TH1)),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE2_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE2_TH2)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE2_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE2_TH1)),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE3"] <- mean(2*(ktherm[3]/(0.2-(-0.2)))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE3_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE3_TH2)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE3_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE3_TH1)),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE3_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE3_TH2)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE3_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE3_TH1)),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE4"] <- mean(2*(ktherm[4]/(0.2-(-0.2)))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE4_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE4_TH2)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE4_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE4_TH1)),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE4_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE4_TH2)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE4_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE4_TH1)),na.rm=TRUE)*3600
         HRM_df[HRM_df$Date==i&HRM_df$Pulse==k,"TREE5"] <- mean(2*(ktherm[5]/(0.2-(-0.2)))*
-                                                                 log((df[df$Date==i&df$Pulse==k,"TREE5_TH2"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE5_TH2)/
-                                                                       (df[df$Date==i&df$Pulse==k,"TREE5_TH1"][tavg_start[1]:tavg_end[1]]/BaseTemp$TREE5_TH1)),na.rm=TRUE)*3600
+                                                                 log((df[df$Date==i&df$Pulse==k,"TREE5_TH2"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE5_TH2)/
+                                                                       (df[df$Date==i&df$Pulse==k,"TREE5_TH1"][tavg_start[1]:tavg_end[1]]-BaseTemp$TREE5_TH1)),na.rm=TRUE)*3600
       }
     }
     
